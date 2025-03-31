@@ -1,0 +1,75 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Status Saver</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .status-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .status-item {
+            margin: 10px;
+            width: 150px;
+        }
+        img, video {
+            width: 100%;
+            border-radius: 10px;
+        }
+        button {
+            margin-top: 5px;
+            padding: 5px;
+            background: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h2>WhatsApp Status Saver</h2>
+    <input type="file" webkitdirectory directory multiple onchange="loadStatuses(event)">
+    <div class="status-container" id="statusContainer"></div><script>
+    function loadStatuses(event) {
+        const container = document.getElementById('statusContainer');
+        container.innerHTML = '';
+        const files = event.target.files;
+        
+        Array.from(files).forEach(file => {
+            const url = URL.createObjectURL(file);
+            const item = document.createElement('div');
+            item.classList.add('status-item');
+            
+            if (file.type.startsWith('image/')) {
+                item.innerHTML = `<img src="${url}" alt="status"><br>`;
+            } else if (file.type.startsWith('video/')) {
+                item.innerHTML = `<video src="${url}" controls></video><br>`;
+            }
+            
+            const downloadBtn = document.createElement('button');
+            downloadBtn.innerText = 'Download';
+            downloadBtn.onclick = () => downloadFile(file, url);
+            
+            item.appendChild(downloadBtn);
+            container.appendChild(item);
+        });
+    }
+
+    function downloadFile(file, url) {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = file.name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+</script>
+
+</body>
+</html>
